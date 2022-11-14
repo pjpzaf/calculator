@@ -1,3 +1,5 @@
+let selectedNumbers = [];
+
 //addition
 function addNumbers() {
     inputNumbers = Array.from(arguments);
@@ -56,3 +58,78 @@ function operate() {
         return operationOutput;
     }
 }
+
+//on-click function for buttons
+let topDisplay = document.getElementById("top-display");
+
+let clickZero = document.getElementById("zero");
+clickZero.addEventListener("click", function(e) {
+    let content = document.createTextNode("0");
+    topDisplay.appendChild(content);
+})
+
+let clickOne = document.getElementById("one");
+clickOne.addEventListener("click", function(e) {
+    let content = document.createTextNode("1");
+    topDisplay.appendChild(content);
+})
+
+let clickTwo = document.getElementById("two");
+clickTwo.addEventListener("click", function(e) {
+    let content = document.createTextNode("2");
+    topDisplay.appendChild(content);
+})
+
+let clickThree= document.getElementById("three");
+clickThree.addEventListener("click", function(e) {
+    let content = document.createTextNode("3");
+    topDisplay.appendChild(content);
+})
+
+let clickFour= document.getElementById("four");
+clickFour.addEventListener("click", function(e) {
+    let content = document.createTextNode("4");
+    topDisplay.appendChild(content);
+})
+
+let clickFive= document.getElementById("five");
+clickFive.addEventListener("click", function(e) {
+    let content = document.createTextNode("5");
+    topDisplay.appendChild(content);
+})
+
+let clickSix = document.getElementById("six");
+clickSix.addEventListener("click", function(e) {
+    let content = document.createTextNode("6");
+    topDisplay.appendChild(content);
+})
+
+let clickSeven = document.getElementById("seven");
+clickSeven.addEventListener("click", function(e) {
+    let content = document.createTextNode("7");
+    topDisplay.appendChild(content);
+})
+
+let clickEight = document.getElementById("eight");
+clickEight.addEventListener("click", function(e) {
+    let content = document.createTextNode("8");
+    topDisplay.appendChild(content);
+})
+
+let clickNine = document.getElementById("nine");
+clickNine.addEventListener("click", function(e) {
+    let content = document.createTextNode("9");
+    topDisplay.appendChild(content);
+})
+
+let clickAllClear = document.getElementById("all-clear");
+clickAllClear.addEventListener("click", function(e) {
+    document.getElementById("top-display").textContent="";
+    document.getElementById("bottom-display").textContent="";    
+})
+
+// let clickClear = document.getElementById("clear");
+// clickClear.addEventListener("click", function(e) {
+//      let content = document.getElementsByClassName("text");
+//      content.remove();
+// })
