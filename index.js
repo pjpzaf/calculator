@@ -119,17 +119,32 @@ clickEight.addEventListener("click", function(e) {
 let clickNine = document.getElementById("nine");
 clickNine.addEventListener("click", function(e) {
     let content = document.createTextNode("9");
+    content.className = "text";
     topDisplay.appendChild(content);
+})
+
+let clickDot = document.getElementById("dot");
+clickDot.addEventListener("click", function(e) {
+    if (document.getElementById("top-display").textContent==="") {
+        let content = document.createTextNode("0.");
+        topDisplay.appendChild(content);       
+    }
+    else if (document.getElementById("top-display").textContent!==""){
+        let content = document.createTextNode(".");
+        topDisplay.appendChild(content);         
+    }
+    document.getElementById("dot").disabled = true;
 })
 
 let clickAllClear = document.getElementById("all-clear");
 clickAllClear.addEventListener("click", function(e) {
     document.getElementById("top-display").textContent="";
-    document.getElementById("bottom-display").textContent="";    
+    document.getElementById("bottom-display").textContent="";
+    document.getElementById("dot").disabled = false;    
 })
 
 // let clickClear = document.getElementById("clear");
 // clickClear.addEventListener("click", function(e) {
 //      let content = document.getElementsByClassName("text");
-//      content.remove();
+//      topDisplay.removeChild(content);
 // })
