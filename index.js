@@ -1,4 +1,5 @@
 let selectedNumbers = [];
+let clearCounter = 0;
 
 //addition
 function addNumbers() {
@@ -64,74 +65,85 @@ let topDisplay = document.getElementById("top-display");
 
 let clickZero = document.getElementById("zero");
 clickZero.addEventListener("click", function(e) {
+    let divContent = document.createElement("div");
     let content = document.createTextNode("0");
-    topDisplay.appendChild(content);
+    displayAdd(divContent,content);
 })
 
 let clickOne = document.getElementById("one");
 clickOne.addEventListener("click", function(e) {
+    let divContent = document.createElement("div");
     let content = document.createTextNode("1");
-    topDisplay.appendChild(content);
+    displayAdd(divContent,content);
 })
 
 let clickTwo = document.getElementById("two");
 clickTwo.addEventListener("click", function(e) {
+    let divContent = document.createElement("div");
     let content = document.createTextNode("2");
-    topDisplay.appendChild(content);
+    displayAdd(divContent,content);
 })
 
 let clickThree= document.getElementById("three");
 clickThree.addEventListener("click", function(e) {
+    let divContent = document.createElement("div");
     let content = document.createTextNode("3");
-    topDisplay.appendChild(content);
+    displayAdd(divContent,content);
 })
 
 let clickFour= document.getElementById("four");
 clickFour.addEventListener("click", function(e) {
+    let divContent = document.createElement("div");
     let content = document.createTextNode("4");
-    topDisplay.appendChild(content);
+    displayAdd(divContent,content);
 })
 
 let clickFive= document.getElementById("five");
 clickFive.addEventListener("click", function(e) {
+    let divContent = document.createElement("div");
     let content = document.createTextNode("5");
-    topDisplay.appendChild(content);
+    displayAdd(divContent,content);
 })
 
 let clickSix = document.getElementById("six");
 clickSix.addEventListener("click", function(e) {
+    let divContent = document.createElement("div");
     let content = document.createTextNode("6");
-    topDisplay.appendChild(content);
+    displayAdd(divContent,content);
 })
 
 let clickSeven = document.getElementById("seven");
 clickSeven.addEventListener("click", function(e) {
+    let divContent = document.createElement("div");
     let content = document.createTextNode("7");
-    topDisplay.appendChild(content);
+    displayAdd(divContent,content);
 })
 
 let clickEight = document.getElementById("eight");
 clickEight.addEventListener("click", function(e) {
+    let divContent = document.createElement("div");
     let content = document.createTextNode("8");
-    topDisplay.appendChild(content);
+    displayAdd(divContent,content);
 })
 
 let clickNine = document.getElementById("nine");
 clickNine.addEventListener("click", function(e) {
+    let divContent = document.createElement("div");
     let content = document.createTextNode("9");
-    content.className = "text";
-    topDisplay.appendChild(content);
+    displayAdd(divContent,content);
 })
 
 let clickDot = document.getElementById("dot");
 clickDot.addEventListener("click", function(e) {
-    if (document.getElementById("top-display").textContent==="") {
+    if (clearCounter===0) {
+        let divContent = document.createElement("div");
         let content = document.createTextNode("0.");
-        topDisplay.appendChild(content);       
+        displayAdd(divContent,content);      
     }
-    else if (document.getElementById("top-display").textContent!==""){
+    else if (clearCounter!==0){
+        let divContent = document.createElement("div");
         let content = document.createTextNode(".");
-        topDisplay.appendChild(content);         
+        displayAdd(divContent,content);      
     }
     document.getElementById("dot").disabled = true;
 })
@@ -140,11 +152,22 @@ let clickAllClear = document.getElementById("all-clear");
 clickAllClear.addEventListener("click", function(e) {
     document.getElementById("top-display").textContent="";
     document.getElementById("bottom-display").textContent="";
-    document.getElementById("dot").disabled = false;    
+    document.getElementById("dot").disabled = false;  
+    clearCounter=0;  
 })
 
-// let clickClear = document.getElementById("clear");
-// clickClear.addEventListener("click", function(e) {
-//      let content = document.getElementsByClassName("text");
-//      topDisplay.removeChild(content);
-// })
+let clickClear = document.getElementById("clear");
+clickClear.addEventListener("click", function(e) {
+     divContent = document.getElementById(`Number${clearCounter}`);
+     topDisplay.removeChild(divContent);
+     clearCounter -= 1;
+     if (clearCounter===0) {document.getElementById("dot").disabled = false;};
+})
+
+//appends content in top display
+function displayAdd (divContent,content) {
+    clearCounter += 1;
+    divContent.id = `Number${clearCounter}`;
+    divContent.appendChild(content);
+    topDisplay.appendChild(divContent);
+}
