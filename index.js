@@ -1,7 +1,10 @@
-let firstOperand = [];
-let secondOperand = [];
+let firstOperandDigits = [];
+let secondOperandDigits = [];
 let clearCounter = 0;
 let operatorCounter = 0;
+let firstOperand = 0;
+let secondOperand = 0;
+
 
 //addition
 function addNumbers() {
@@ -67,7 +70,7 @@ let topDisplay = document.getElementById("top-display");
 
 let clickZero = document.getElementById("zero");
 clickZero.addEventListener("click", function(e) {
-    let inputVal = 0; selectStorage(inputVal);
+    let inputVal = '0'; selectStorage(inputVal);
     let divContent = document.createElement("div");
     let content = document.createTextNode(`${inputVal}`);
     displayAdd(divContent,content);
@@ -75,7 +78,7 @@ clickZero.addEventListener("click", function(e) {
 
 let clickOne = document.getElementById("one");
 clickOne.addEventListener("click", function(e) {
-    let inputVal = 1; selectStorage(inputVal);
+    let inputVal = '1'; selectStorage(inputVal);
     let divContent = document.createElement("div");
     let content = document.createTextNode(`${inputVal}`);
     displayAdd(divContent,content);
@@ -83,7 +86,7 @@ clickOne.addEventListener("click", function(e) {
 
 let clickTwo = document.getElementById("two");
 clickTwo.addEventListener("click", function(e) {
-    let inputVal = 2; selectStorage(inputVal);
+    let inputVal = '2'; selectStorage(inputVal);
     let divContent = document.createElement("div");
     let content = document.createTextNode(`${inputVal}`);
     displayAdd(divContent,content);
@@ -91,7 +94,7 @@ clickTwo.addEventListener("click", function(e) {
 
 let clickThree= document.getElementById("three");
 clickThree.addEventListener("click", function(e) {
-    let inputVal = 3; selectStorage(inputVal);
+    let inputVal = '3'; selectStorage(inputVal);
     let divContent = document.createElement("div");
     let content = document.createTextNode(`${inputVal}`);
     displayAdd(divContent,content);
@@ -99,7 +102,7 @@ clickThree.addEventListener("click", function(e) {
 
 let clickFour= document.getElementById("four");
 clickFour.addEventListener("click", function(e) {
-    let inputVal = 4; selectStorage(inputVal);
+    let inputVal = '4'; selectStorage(inputVal);
     let divContent = document.createElement("div");
     let content = document.createTextNode(`${inputVal}`);
     displayAdd(divContent,content);
@@ -107,7 +110,7 @@ clickFour.addEventListener("click", function(e) {
 
 let clickFive= document.getElementById("five");
 clickFive.addEventListener("click", function(e) {
-    let inputVal = 5; selectStorage(inputVal);
+    let inputVal = '5'; selectStorage(inputVal);
     let divContent = document.createElement("div");
     let content = document.createTextNode(`${inputVal}`);
     displayAdd(divContent,content);
@@ -115,7 +118,7 @@ clickFive.addEventListener("click", function(e) {
 
 let clickSix = document.getElementById("six");
 clickSix.addEventListener("click", function(e) {
-    let inputVal = 6; selectStorage(inputVal);
+    let inputVal = '6'; selectStorage(inputVal);
     let divContent = document.createElement("div");
     let content = document.createTextNode(`${inputVal}`);
     displayAdd(divContent,content);
@@ -123,7 +126,7 @@ clickSix.addEventListener("click", function(e) {
 
 let clickSeven = document.getElementById("seven");
 clickSeven.addEventListener("click", function(e) {
-    let inputVal = 7; selectStorage(inputVal);
+    let inputVal = '7'; selectStorage(inputVal);
     let divContent = document.createElement("div");
     let content = document.createTextNode(`${inputVal}`);
     displayAdd(divContent,content);
@@ -131,7 +134,7 @@ clickSeven.addEventListener("click", function(e) {
 
 let clickEight = document.getElementById("eight");
 clickEight.addEventListener("click", function(e) {
-    let inputVal = 8; selectStorage(inputVal);
+    let inputVal = '8'; selectStorage(inputVal);
     let divContent = document.createElement("div");
     let content = document.createTextNode(`${inputVal}`);
     displayAdd(divContent,content);
@@ -139,7 +142,7 @@ clickEight.addEventListener("click", function(e) {
 
 let clickNine = document.getElementById("nine");
 clickNine.addEventListener("click", function(e) {
-    let inputVal = 9; selectStorage(inputVal);
+    let inputVal = '9'; selectStorage(inputVal);
     let divContent = document.createElement("div");
     let content = document.createTextNode(`${inputVal}`);
     displayAdd(divContent,content);
@@ -166,7 +169,8 @@ let clickAllClear = document.getElementById("all-clear");
 clickAllClear.addEventListener("click", function(e) {
     document.getElementById("top-display").textContent="";
     document.getElementById("bottom-display").textContent="";
-    document.getElementById("dot").disabled = false;  
+    document.getElementById("dot").disabled = false;
+    firstOperandDigits = []; 
     clearCounter=0;  
 })
 
@@ -176,6 +180,26 @@ clickClear.addEventListener("click", function(e) {
      topDisplay.removeChild(divContent);
      clearCounter -= 1;
      if (clearCounter===0) {document.getElementById("dot").disabled = false;};
+})
+
+//add button click function
+let clickAdd = document.getElementById("add");
+clickAdd.addEventListener("click", function(e) {
+    if (clearCounter===0) {
+        document.getElementById("add").disabled = false;
+        let inputVal = "0"; selectStorage(inputVal);
+        let divContent = document.createElement("div");
+        let content = document.createTextNode(`${inputVal} +`);
+        displayAdd(divContent,content);
+        operatorCounter += 1;     
+    }
+    else if (clearCounter!==0){
+        document.getElementById("add").disabled = false;
+        let divContent = document.createElement("div");
+        let content = document.createTextNode(`\u00A0 + \u00A0`);
+        displayAdd(divContent,content); 
+        operatorCounter += 1;   
+    }
 })
 
 //appends content in top display
@@ -189,9 +213,22 @@ function displayAdd (divContent,content) {
 //selects where to store numbers
 function selectStorage (inputVal) {
     if (operatorCounter===0) {
-        firstOperand[clearCounter]=inputVal
+        firstOperandDigits[clearCounter]=inputVal
     }
     else if (operatorCounter===1) {
-        secondOperand[clearCounter]=inputVal;
+        secondOperandDigits[clearCounter]=inputVal;
     }
 }
+
+//combines the digits in the array 
+// please replace this block of code to stuffOperand = firstOperandDigits.join().replaceAll(",","")
+function mergeDigits() {
+    let numberToProcess = Array.from(arguments)
+    let outputNum="";
+    for (let i=0;i<numberToProcess.length;i++){
+            outputNum = numberToProcess.join();
+    }
+    outputNum = outputNum.replaceAll(",","")
+    return outputNum;
+}
+
