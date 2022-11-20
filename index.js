@@ -2,8 +2,17 @@ let firstOperandDigits = [];
 let secondOperandDigits = [];
 let clearCounter = 0;
 let operatorCounter = 0;
+let dotCounter = 0;
+
 let firstOperand = 0;
 let secondOperand = 0;
+let operationResult = 0;
+
+let addCounter = 0;
+let minusCounter = 0;
+let divideCounter = 0;
+let multiplyCounter = 0;
+let exponentCounter = 0;
 
 
 //addition
@@ -67,6 +76,7 @@ function operate() {
 
 //on-click function for buttons
 let topDisplay = document.getElementById("top-display");
+let bottomDisplay = document.getElementById("bottom-display");
 
 let clickZero = document.getElementById("zero");
 clickZero.addEventListener("click", function(e) {
@@ -150,19 +160,20 @@ clickNine.addEventListener("click", function(e) {
 
 let clickDot = document.getElementById("dot");
 clickDot.addEventListener("click", function(e) {
-    if (clearCounter===0) {
+    if (dotCounter===0) {
         let inputVal = "0."; selectStorage(inputVal);
         let divContent = document.createElement("div");
         let content = document.createTextNode(`${inputVal}`);
-        displayAdd(divContent,content);     
+        displayAdd(divContent,content); 
+        document.getElementById("dot").disabled = true;
     }
-    else if (clearCounter!==0){
+    else if (dotCounter===1){
         let inputVal = "."; selectStorage(inputVal);
         let divContent = document.createElement("div");
         let content = document.createTextNode(`${inputVal}`);
-        displayAdd(divContent,content);   
+        displayAdd(divContent,content);  
+        document.getElementById("dot").disabled = true; 
     }
-    document.getElementById("dot").disabled = true;
 })
 
 let clickAllClear = document.getElementById("all-clear");
@@ -171,7 +182,7 @@ clickAllClear.addEventListener("click", function(e) {
     document.getElementById("bottom-display").textContent="";
     document.getElementById("dot").disabled = false;
     firstOperandDigits = []; 
-    clearCounter=0;  
+    clearCounter=0; dotCounter=0; 
 })
 
 let clickClear = document.getElementById("clear");
@@ -182,28 +193,59 @@ clickClear.addEventListener("click", function(e) {
      if (clearCounter===0) {document.getElementById("dot").disabled = false;};
 })
 
+
+//operations
 //add button click function
 let clickAdd = document.getElementById("add");
 clickAdd.addEventListener("click", function(e) {
     if (clearCounter===0) {
-        document.getElementById("add").disabled = false;
+        document.getElementById("add").disabled = true;
         let inputVal = "0"; selectStorage(inputVal);
         let divContent = document.createElement("div");
         let content = document.createTextNode(`${inputVal} +`);
         displayAdd(divContent,content);
-        operatorCounter += 1;     
+        mergeDigits(firstOperandDigits);
+  
+
+        addCounter += 1;
     }
     else if (clearCounter!==0){
-        document.getElementById("add").disabled = false;
+        document.getElementById("add").disabled = true;
         let divContent = document.createElement("div");
         let content = document.createTextNode(`\u00A0 + \u00A0`);
         displayAdd(divContent,content); 
-        operatorCounter += 1;   
+        mergeDigits(firstOperandDigits);
+
+
+        addCounter += 1;
+    }
+    document.getElementById("dot").disabled = false; dotCounter=0; //for second operand to be fractional
+})
+
+let clickEquals = document.getElementById("equals");
+clickEquals.addEventListener("click", function(e) {
+    if (addCounter===1) {
+        // addCounter=0; document.getElementById("add").disabled = false;
+        mergeDigits(secondOperandDigits);
+        operationResult = addNumbers(firstOperand,secondOperand);
+        lowerDisplayAdd(operationResult); 
+        firstOperand=operationResult;
+        return operationResult;
     }
 })
 
+//appends content in lower display
+function lowerDisplayAdd (operationResult) {
+    document.getElementById("bottom-display").textContent="";
+    let divContent = document.createElement("div");
+    let content = document.createTextNode(`= ${operationResult}`);
+    divContent.appendChild(content);
+    bottomDisplay.appendChild(divContent);
+}
+
 //appends content in top display
 function displayAdd (divContent,content) {
+    dotCounter=1;
     clearCounter += 1;
     divContent.id = `Number${clearCounter}`;
     divContent.appendChild(content);
@@ -213,22 +255,21 @@ function displayAdd (divContent,content) {
 //selects where to store numbers
 function selectStorage (inputVal) {
     if (operatorCounter===0) {
-        firstOperandDigits[clearCounter]=inputVal
+        firstOperandDigits[clearCounter]=inputVal;
     }
     else if (operatorCounter===1) {
         secondOperandDigits[clearCounter]=inputVal;
     }
 }
 
-//combines the digits in the array 
-// please replace this block of code to stuffOperand = firstOperandDigits.join().replaceAll(",","")
+//combines the digits in the array and converts it into number data type
 function mergeDigits() {
     let numberToProcess = Array.from(arguments)
-    let outputNum="";
-    for (let i=0;i<numberToProcess.length;i++){
-            outputNum = numberToProcess.join();
+    if (operatorCounter===0) {
+        return firstOperand = +(numberToProcess.join().replaceAll(",",""))
     }
-    outputNum = outputNum.replaceAll(",","")
-    return outputNum;
+    else if (operatorCounter===1) {
+        return secondOperand = +(numberToProcess.join().replaceAll(",",""))
+    }
 }
 
