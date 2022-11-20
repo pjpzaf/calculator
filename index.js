@@ -205,7 +205,8 @@ clickAdd.addEventListener("click", function(e) {
         let content = document.createTextNode(`${inputVal} +`);
         displayAdd(divContent,content);
         mergeDigits(firstOperandDigits);
-  
+
+        operatorCounter += 1;
 
         addCounter += 1;
     }
@@ -216,6 +217,7 @@ clickAdd.addEventListener("click", function(e) {
         displayAdd(divContent,content); 
         mergeDigits(firstOperandDigits);
 
+        operatorCounter += 1;
 
         addCounter += 1;
     }
