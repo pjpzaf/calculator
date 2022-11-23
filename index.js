@@ -284,7 +284,7 @@ clickEquals.addEventListener("click", function(e) {
         
         addCounter=0; operatorCounter = 0;
         firstOperandDigits[0] = `${operationResult}`
-        secondOperandDigits=[];
+        secondOperandDigits=[];firstOperandDigits = [];
         document.getElementById("add").disabled = false;
         document.getElementById("top-display").textContent="";
         let inputVal = operationResult; selectStorage(inputVal);
@@ -334,10 +334,12 @@ function mergeDigits() {
     let numberToProcess = Array.from(arguments)
     if (operatorCounter===0) {
         firstOperand = +(numberToProcess.join().replaceAll(",",""))
+        secondOperandDigits=[];firstOperandDigits = [];
         return firstOperand 
     }
     else if (operatorCounter===1) {
         secondOperand = +(numberToProcess.join().replaceAll(",",""))
+        secondOperandDigits=[];firstOperandDigits = [];
         return secondOperand
     }
 }
