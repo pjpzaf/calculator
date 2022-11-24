@@ -1,4 +1,5 @@
 let firstOperandDigits = [];
+let firstOperandLength=0;
 let secondOperandDigits = [];
 let clearCounter = 0;
 let operatorCounter = 0;
@@ -181,9 +182,14 @@ let clickAllClear = document.getElementById("all-clear");
 clickAllClear.addEventListener("click", function(e) {
     document.getElementById("top-display").textContent="";
     document.getElementById("bottom-display").textContent="";
+    document.getElementById("add").disabled = false;
     document.getElementById("dot").disabled = false;
-    firstOperandDigits = [];  secondOperandDigits = []
+    firstOperandDigits = [];  secondOperandDigits = [];
+    firstOperandLength = 0;
     clearCounter=0; dotCounter=0; operatorCounter=0;
+    firstOperand = 0; secondOperand = 0; operationResult = 0;
+    addCounter = 0; minusCounter = 0; divideCounter = 0; 
+    multiplyCounter = 0; exponentCounter = 0;
 })
 
 //clear or backspace function
@@ -201,13 +207,18 @@ clickClear.addEventListener("click", function(e) {
         secondOperandDigits.pop();
      }
      if (clearCounter===0) {
-        dotCounter=0;
+        dotCounter=0;firstOperandLength=0;
         document.getElementById("dot").disabled = false;        
         document.getElementById("add").disabled = false;
         document.getElementById("minus").disabled = false;
     }
-    else if (clearCounter===firstOperandDigits.length) {
-        operatorCounter=0;
+    else if (clearCounter===firstOperandLength) {
+        operatorCounter=0; addCounter=0;
+        document.getElementById("add").disabled = false;
+        document.getElementById("equals").disabled = true;
+    }
+    else if (clearCounter===(firstOperandLength+1)) {
+        document.getElementById("equals").disabled = true;
     }
 })
 
@@ -218,9 +229,10 @@ let clickAdd = document.getElementById("add");
 clickAdd.addEventListener("click", function(e) {
     if (clearCounter===0) {
         document.getElementById("add").disabled = true;
+        document.getElementById("equals").disabled = true;
         let inputVal = "0"; selectStorage(inputVal);
         let divContent = document.createElement("div");
-        let content = document.createTextNode(`${inputVal} + `);
+        let content = document.createTextNode(`${inputVal} + \u00A0`);
         displayAdd(divContent,content);
         mergeDigits(firstOperandDigits);
 
@@ -282,8 +294,7 @@ clickEquals.addEventListener("click", function(e) {
         operationResult = addNumbers(firstOperand,secondOperand);
         lowerDisplayAdd(operationResult); 
         
-        addCounter=0; operatorCounter = 0;
-        firstOperandDigits[0] = `${operationResult}`
+        addCounter=0; operatorCounter = 0; firstOperandLength = 0;
         secondOperandDigits=[];firstOperandDigits = [];
         document.getElementById("add").disabled = false;
         document.getElementById("top-display").textContent="";
@@ -322,10 +333,13 @@ function displayAdd (divContent,content) {
 //selects where to store numbers
 function selectStorage (inputVal) {
     if (operatorCounter===0) {
+        document.getElementById("equals").disabled = true;
+        firstOperandLength += 1;
         return firstOperandDigits[clearCounter]=inputVal;
     }
     else if (operatorCounter===1) {
-        return secondOperandDigits[(clearCounter-1)-firstOperandDigits.length]=inputVal;
+        document.getElementById("equals").disabled = false;
+        return secondOperandDigits[(clearCounter-1)-firstOperandLength]=inputVal;
     }
 }
 
@@ -334,12 +348,12 @@ function mergeDigits() {
     let numberToProcess = Array.from(arguments)
     if (operatorCounter===0) {
         firstOperand = +(numberToProcess.join().replaceAll(",",""))
-        secondOperandDigits=[];firstOperandDigits = [];
+        // firstOperandDigits = [];
         return firstOperand 
     }
     else if (operatorCounter===1) {
         secondOperand = +(numberToProcess.join().replaceAll(",",""))
-        secondOperandDigits=[];firstOperandDigits = [];
+        // secondOperandDigits=[];
         return secondOperand
     }
 }
