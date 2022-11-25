@@ -212,11 +212,13 @@ clickClear.addEventListener("click", function(e) {
         document.getElementById("dot").disabled = false;        
         document.getElementById("add").disabled = false;
         document.getElementById("minus").disabled = false;
+        document.getElementById("multiply").disabled = false;
     }
     else if (clearCounter===firstOperandLength) {
         operatorCounter=0; addCounter=0; minusCounter=0; multiplyCounter=0; divideCounter=0; exponentCounter=0;
         document.getElementById("add").disabled = false;
         document.getElementById("minus").disabled = false;
+        document.getElementById("multiply").disabled = false;
         document.getElementById("equals").disabled = true;
     }
     else if (clearCounter===(firstOperandLength+1)) {
@@ -232,8 +234,11 @@ clickAdd.addEventListener("click", function(e) {
     if (clearCounter===0) {
         let inputVal = "0"; selectStorage(inputVal);
         let divContent = document.createElement("div");
-        let content = document.createTextNode(`${inputVal} + \u00A0`);
+        let content = document.createTextNode(`${inputVal}`);
         displayAdd(divContent,content);
+        let divContent1 = document.createElement("div");
+        let content1 = document.createTextNode(`\u00A0+\u00A0`);
+        displayAdd(divContent1,content1);
         mergeDigits(firstOperandDigits);
         operatorCounter = 1;
         addCounter = 1;
@@ -257,8 +262,11 @@ clickMinus.addEventListener("click", function(e) {
     if (clearCounter===0) {
         let inputVal = "0"; selectStorage(inputVal);
         let divContent = document.createElement("div");
-        let content = document.createTextNode(`${inputVal} - \u00A0`);
+        let content = document.createTextNode(`${inputVal}`);
         displayAdd(divContent,content);
+        let divContent1 = document.createElement("div");
+        let content1 = document.createTextNode(`\u00A0-\u00A0`);
+        displayAdd(divContent1,content1);
         mergeDigits(firstOperandDigits);
         operatorCounter = 1;
         minusCounter = 1;
@@ -271,6 +279,34 @@ clickMinus.addEventListener("click", function(e) {
         mergeDigits(firstOperandDigits);
         operatorCounter = 1;
         minusCounter = 1;
+        disableOperator();
+    }
+    document.getElementById("dot").disabled = false; dotCounter=0; //for second operand to accept fractional inputs
+})
+
+//multiply button click function
+let clickMultiply = document.getElementById("multiply");
+clickMultiply.addEventListener("click", function(e) {
+    if (clearCounter===0) {
+        let inputVal = "0"; selectStorage(inputVal);
+        let divContent = document.createElement("div");
+        let content = document.createTextNode(`${inputVal}`);
+        displayAdd(divContent,content);
+        let divContent1 = document.createElement("div");
+        let content1 = document.createTextNode(`\u00A0 × \u00A0`);
+        displayAdd(divContent1,content1);
+        mergeDigits(firstOperandDigits);
+        operatorCounter = 1;
+        multiplyCounter = 1;
+        disableOperatorAll();
+    }
+    else if (clearCounter!==0){
+        let divContent = document.createElement("div");
+        let content = document.createTextNode(`\u00A0 × \u00A0`);
+        displayAdd(divContent,content); 
+        mergeDigits(firstOperandDigits);
+        operatorCounter = 1;
+        multiplyCounter = 1;
         disableOperator();
     }
     document.getElementById("dot").disabled = false; dotCounter=0; //for second operand to accept fractional inputs
@@ -291,6 +327,13 @@ clickEquals.addEventListener("click", function(e) {
         mergeDigits(secondOperandDigits);
         operationResult = subtractNumbers(firstOperand,secondOperand);
         lowerDisplayAdd(operationResult); minusCounter=0;         
+        processEval(operationResult);
+    }
+    else if (multiplyCounter===1) {
+        document.getElementById("bottom-display").textContent="";
+        mergeDigits(secondOperandDigits);
+        operationResult = multiplyNumbers(firstOperand,secondOperand);
+        lowerDisplayAdd(operationResult); multiplyCounter=0;         
         processEval(operationResult);
     }
 })
@@ -344,7 +387,7 @@ function disableOperatorAll () {
     if (clearCounter===0) {
     document.getElementById("add").disabled = true;
     document.getElementById("minus").disabled = true;
-    // document.getElementById("multiply").disabled = true;
+    document.getElementById("multiply").disabled = true;
     // document.getElementById("divide").disabled = true;
     // document.getElementById("exponent").disabled = true;
     document.getElementById("equals").disabled = true;
@@ -356,24 +399,23 @@ function disableOperator () {
     if (clearCounter!==0) {
     document.getElementById("add").disabled = true;
     document.getElementById("minus").disabled = true;
-    // document.getElementById("multiply").disabled = true;
+    document.getElementById("multiply").disabled = true;
     // document.getElementById("divide").disabled = true;
     // document.getElementById("exponent").disabled = true;
     }
 }
 
 //process evaluation and display changes
-
 function processEval (operationResult) {
     operatorCounter = 0; firstOperandLength = 0;
     secondOperandDigits=[];firstOperandDigits = [];
     document.getElementById("add").disabled = false;
     document.getElementById("minus").disabled = false;
-    // document.getElementById("multiply").disabled = false;
+    document.getElementById("multiply").disabled = false;
     // document.getElementById("divide").disabled = false;
     // document.getElementById("exponent").disabled = false;
     document.getElementById("top-display").textContent="";
-    let inputVal = operationResult; selectStorage(inputVal);
+    let inputVal = `${operationResult}`; selectStorage(inputVal);
     let divContent = document.createElement("div");
     let content = document.createTextNode(`${inputVal}`);
     dotCounter=1;
@@ -381,8 +423,6 @@ function processEval (operationResult) {
     divContent.id = `Number${clearCounter}`;
     divContent.appendChild(content);
     topDisplay.appendChild(divContent);
-
-
     return operationResult;
 }
 
