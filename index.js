@@ -183,6 +183,7 @@ clickAllClear.addEventListener("click", function(e) {
     document.getElementById("top-display").textContent="";
     document.getElementById("bottom-display").textContent="";
     document.getElementById("add").disabled = false;
+    document.getElementById("minus").disabled = false;
     document.getElementById("dot").disabled = false;
     firstOperandDigits = [];  secondOperandDigits = [];
     firstOperandLength = 0;
@@ -213,8 +214,9 @@ clickClear.addEventListener("click", function(e) {
         document.getElementById("minus").disabled = false;
     }
     else if (clearCounter===firstOperandLength) {
-        operatorCounter=0; addCounter=0;
+        operatorCounter=0; addCounter=0; minusCounter=0; multiplyCounter=0; divideCounter=0; exponentCounter=0;
         document.getElementById("add").disabled = false;
+        document.getElementById("minus").disabled = false;
         document.getElementById("equals").disabled = true;
     }
     else if (clearCounter===(firstOperandLength+1)) {
@@ -228,87 +230,68 @@ clickClear.addEventListener("click", function(e) {
 let clickAdd = document.getElementById("add");
 clickAdd.addEventListener("click", function(e) {
     if (clearCounter===0) {
-        document.getElementById("add").disabled = true;
-        document.getElementById("equals").disabled = true;
         let inputVal = "0"; selectStorage(inputVal);
         let divContent = document.createElement("div");
         let content = document.createTextNode(`${inputVal} + \u00A0`);
         displayAdd(divContent,content);
         mergeDigits(firstOperandDigits);
-
         operatorCounter = 1;
-
         addCounter = 1;
+        disableOperatorAll();
     }
     else if (clearCounter!==0){
-        document.getElementById("add").disabled = true;
         let divContent = document.createElement("div");
         let content = document.createTextNode(`\u00A0 + \u00A0`);
         displayAdd(divContent,content); 
         mergeDigits(firstOperandDigits);
-
         operatorCounter = 1;
-
         addCounter = 1;
+        disableOperator();
     }
     document.getElementById("dot").disabled = false; dotCounter=0; //for second operand to be fractional
 })
 
 //minus button click function
-// let clickMinus = document.getElementById("minus");
-// clickMinus.addEventListener("click", function(e) {
-//     if (clearCounter===0) {
-//         document.getElementById("add").disabled = true;
-//         document.getElementById("minus").disabled = true;
-//         let inputVal = "0"; selectStorage(inputVal);
-//         let divContent = document.createElement("div");
-//         let content = document.createTextNode(`${inputVal} + `);
-//         displayAdd(divContent,content);
-//         mergeDigits(firstOperandDigits);
-
-//         operatorCounter = 1;
-
-//         minusCounter = 1;
-//     }
-//     else if (clearCounter!==0){
-//         document.getElementById("add").disabled = true;
-//         let divContent = document.createElement("div");
-//         let content = document.createTextNode(`\u00A0 - \u00A0`);
-//         displayAdd(divContent,content); 
-//         mergeDigits(firstOperandDigits);
-
-//         operatorCounter = 1;
-
-//         minusCounter = 1;
-//     }
-//     document.getElementById("dot").disabled = false; dotCounter=0; //for second operand to be fractional
-// })
+let clickMinus = document.getElementById("minus");
+clickMinus.addEventListener("click", function(e) {
+    if (clearCounter===0) {
+        let inputVal = "0"; selectStorage(inputVal);
+        let divContent = document.createElement("div");
+        let content = document.createTextNode(`${inputVal} - \u00A0`);
+        displayAdd(divContent,content);
+        mergeDigits(firstOperandDigits);
+        operatorCounter = 1;
+        minusCounter = 1;
+        disableOperatorAll();
+    }
+    else if (clearCounter!==0){
+        let divContent = document.createElement("div");
+        let content = document.createTextNode(`\u00A0 - \u00A0`);
+        displayAdd(divContent,content); 
+        mergeDigits(firstOperandDigits);
+        operatorCounter = 1;
+        minusCounter = 1;
+        disableOperator();
+    }
+    document.getElementById("dot").disabled = false; dotCounter=0; //for second operand to accept fractional inputs
+})
 
 
 let clickEquals = document.getElementById("equals");
 clickEquals.addEventListener("click", function(e) {
     if (addCounter===1) {
-
         document.getElementById("bottom-display").textContent="";
         mergeDigits(secondOperandDigits);
         operationResult = addNumbers(firstOperand,secondOperand);
-        lowerDisplayAdd(operationResult); 
-        
-        addCounter=0; operatorCounter = 0; firstOperandLength = 0;
-        secondOperandDigits=[];firstOperandDigits = [];
-        document.getElementById("add").disabled = false;
-        document.getElementById("top-display").textContent="";
-        let inputVal = operationResult; selectStorage(inputVal);
-        let divContent = document.createElement("div");
-        let content = document.createTextNode(`${inputVal}`);
-        dotCounter=1;
-        clearCounter = 1;
-        divContent.id = `Number${clearCounter}`;
-        divContent.appendChild(content);
-        topDisplay.appendChild(divContent);
-
-
-        return operationResult;
+        lowerDisplayAdd(operationResult); addCounter=0; 
+        processEval(operationResult);
+    }
+    else if (minusCounter===1) {
+        document.getElementById("bottom-display").textContent="";
+        mergeDigits(secondOperandDigits);
+        operationResult = subtractNumbers(firstOperand,secondOperand);
+        lowerDisplayAdd(operationResult); minusCounter=0;         
+        processEval(operationResult);
     }
 })
 
@@ -348,13 +331,58 @@ function mergeDigits() {
     let numberToProcess = Array.from(arguments)
     if (operatorCounter===0) {
         firstOperand = +(numberToProcess.join().replaceAll(",",""))
-        // firstOperandDigits = [];
         return firstOperand 
     }
     else if (operatorCounter===1) {
         secondOperand = +(numberToProcess.join().replaceAll(",",""))
-        // secondOperandDigits=[];
         return secondOperand
     }
+}
+
+//disables click on all operation when at least one is clicked
+function disableOperatorAll () {
+    if (clearCounter===0) {
+    document.getElementById("add").disabled = true;
+    document.getElementById("minus").disabled = true;
+    // document.getElementById("multiply").disabled = true;
+    // document.getElementById("divide").disabled = true;
+    // document.getElementById("exponent").disabled = true;
+    document.getElementById("equals").disabled = true;
+    }
+}
+
+//disables click on all operation when at least one is clicked except for the equals button
+function disableOperator () {
+    if (clearCounter!==0) {
+    document.getElementById("add").disabled = true;
+    document.getElementById("minus").disabled = true;
+    // document.getElementById("multiply").disabled = true;
+    // document.getElementById("divide").disabled = true;
+    // document.getElementById("exponent").disabled = true;
+    }
+}
+
+//process evaluation and display changes
+
+function processEval (operationResult) {
+    operatorCounter = 0; firstOperandLength = 0;
+    secondOperandDigits=[];firstOperandDigits = [];
+    document.getElementById("add").disabled = false;
+    document.getElementById("minus").disabled = false;
+    // document.getElementById("multiply").disabled = false;
+    // document.getElementById("divide").disabled = false;
+    // document.getElementById("exponent").disabled = false;
+    document.getElementById("top-display").textContent="";
+    let inputVal = operationResult; selectStorage(inputVal);
+    let divContent = document.createElement("div");
+    let content = document.createTextNode(`${inputVal}`);
+    dotCounter=1;
+    clearCounter = 1;
+    divContent.id = `Number${clearCounter}`;
+    divContent.appendChild(content);
+    topDisplay.appendChild(divContent);
+
+
+    return operationResult;
 }
 
