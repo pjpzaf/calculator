@@ -48,6 +48,11 @@ function divideNumbers() {
         return quotOfNumbers;
     }
 }
+function raiseNumberTo() {
+    inputNumbers = Array.from(arguments);
+    let resultOfOperation = inputNumbers[0] ** inputNumbers[1];
+    return resultOfOperation;
+}
 
 //function that takes an operator and 2 numbers
 function operate() {
@@ -184,6 +189,9 @@ clickAllClear.addEventListener("click", function(e) {
     document.getElementById("bottom-display").textContent="";
     document.getElementById("add").disabled = false;
     document.getElementById("minus").disabled = false;
+    document.getElementById("multiply").disabled = false;
+    document.getElementById("divide").disabled = false;
+    document.getElementById("exponent").disabled = false;
     document.getElementById("dot").disabled = false;
     firstOperandDigits = [];  secondOperandDigits = [];
     firstOperandLength = 0;
@@ -213,12 +221,17 @@ clickClear.addEventListener("click", function(e) {
         document.getElementById("add").disabled = false;
         document.getElementById("minus").disabled = false;
         document.getElementById("multiply").disabled = false;
+        document.getElementById("divide").disabled = false;
+        document.getElementById("exponent").disabled = false;
     }
     else if (clearCounter===firstOperandLength) {
-        operatorCounter=0; addCounter=0; minusCounter=0; multiplyCounter=0; divideCounter=0; exponentCounter=0;
+        operatorCounter=0; addCounter=0; minusCounter=0; multiplyCounter=0; 
+        divideCounter=0; exponentCounter=0;
         document.getElementById("add").disabled = false;
         document.getElementById("minus").disabled = false;
         document.getElementById("multiply").disabled = false;
+        document.getElementById("divide").disabled = false;
+        document.getElementById("exponent").disabled = false;
         document.getElementById("equals").disabled = true;
     }
     else if (clearCounter===(firstOperandLength+1)) {
@@ -312,7 +325,61 @@ clickMultiply.addEventListener("click", function(e) {
     document.getElementById("dot").disabled = false; dotCounter=0; //for second operand to accept fractional inputs
 })
 
-
+//divide button click function
+let clickDivide = document.getElementById("divide");
+clickDivide.addEventListener("click", function(e) {
+    if (clearCounter===0) {
+        let inputVal = "0"; selectStorage(inputVal);
+        let divContent = document.createElement("div");
+        let content = document.createTextNode(`${inputVal}`);
+        displayAdd(divContent,content);
+        let divContent1 = document.createElement("div");
+        let content1 = document.createTextNode(`\u00A0 ÷ \u00A0`);
+        displayAdd(divContent1,content1);
+        mergeDigits(firstOperandDigits);
+        operatorCounter = 1;
+        divideCounter = 1;
+        disableOperatorAll();
+    }
+    else if (clearCounter!==0){
+        let divContent = document.createElement("div");
+        let content = document.createTextNode(`\u00A0 ÷ \u00A0`);
+        displayAdd(divContent,content); 
+        mergeDigits(firstOperandDigits);
+        operatorCounter = 1;
+        divideCounter = 1;
+        disableOperator();
+    }
+    document.getElementById("dot").disabled = false; dotCounter=0; //for second operand to accept fractional inputs
+})
+//raise to button click function
+let clickExponent = document.getElementById("exponent");
+clickExponent.addEventListener("click", function(e) {
+    if (clearCounter===0) {
+        let inputVal = "0"; selectStorage(inputVal);
+        let divContent = document.createElement("div");
+        let content = document.createTextNode(`${inputVal}`);
+        displayAdd(divContent,content);
+        let divContent1 = document.createElement("div");
+        let content1 = document.createTextNode("^");
+        displayAdd(divContent1,content1);
+        mergeDigits(firstOperandDigits);
+        operatorCounter = 1;
+        exponentCounter = 1;
+        disableOperatorAll();
+    }
+    else if (clearCounter!==0){
+        let divContent = document.createElement("div");
+        let content = document.createTextNode("^");
+        displayAdd(divContent,content); 
+        mergeDigits(firstOperandDigits);
+        operatorCounter = 1;
+        exponentCounter = 1;
+        disableOperator();
+    }
+    document.getElementById("dot").disabled = false; dotCounter=0; //for second operand to accept fractional inputs
+})
+//equals button function
 let clickEquals = document.getElementById("equals");
 clickEquals.addEventListener("click", function(e) {
     if (addCounter===1) {
@@ -336,6 +403,20 @@ clickEquals.addEventListener("click", function(e) {
         lowerDisplayAdd(operationResult); multiplyCounter=0;         
         processEval(operationResult);
     }
+    else if (divideCounter===1) {
+        document.getElementById("bottom-display").textContent="";
+        mergeDigits(secondOperandDigits);
+        operationResult = divideNumbers(firstOperand,secondOperand);
+        lowerDisplayAdd(operationResult); divideCounter=0;         
+        processEval(operationResult);
+    }
+    else if (exponentCounter===1) {
+        document.getElementById("bottom-display").textContent="";
+        mergeDigits(secondOperandDigits);
+        operationResult = raiseNumberTo(firstOperand,secondOperand);
+        lowerDisplayAdd(operationResult); divideCounter=0;         
+        processEval(operationResult);
+    }
 })
 
 //appends content in lower display
@@ -357,15 +438,16 @@ function displayAdd (divContent,content) {
 }
 
 //selects where to store numbers
+//add .push() array method
 function selectStorage (inputVal) {
     if (operatorCounter===0) {
         document.getElementById("equals").disabled = true;
         firstOperandLength += 1;
-        return firstOperandDigits[clearCounter]=inputVal;
+        return firstOperandDigits.push(inputVal);
     }
     else if (operatorCounter===1) {
         document.getElementById("equals").disabled = false;
-        return secondOperandDigits[(clearCounter-1)-firstOperandLength]=inputVal;
+        return secondOperandDigits.push(inputVal);
     }
 }
 
@@ -384,36 +466,33 @@ function mergeDigits() {
 
 //disables click on all operation when at least one is clicked
 function disableOperatorAll () {
-    if (clearCounter===0) {
     document.getElementById("add").disabled = true;
     document.getElementById("minus").disabled = true;
     document.getElementById("multiply").disabled = true;
-    // document.getElementById("divide").disabled = true;
-    // document.getElementById("exponent").disabled = true;
+    document.getElementById("divide").disabled = true;
+    document.getElementById("exponent").disabled = true;
     document.getElementById("equals").disabled = true;
-    }
 }
 
 //disables click on all operation when at least one is clicked except for the equals button
 function disableOperator () {
-    if (clearCounter!==0) {
     document.getElementById("add").disabled = true;
     document.getElementById("minus").disabled = true;
     document.getElementById("multiply").disabled = true;
-    // document.getElementById("divide").disabled = true;
-    // document.getElementById("exponent").disabled = true;
-    }
+    document.getElementById("divide").disabled = true;
+    document.getElementById("exponent").disabled = true;
 }
 
 //process evaluation and display changes
 function processEval (operationResult) {
+    if (operationResult!==undefined) {
     operatorCounter = 0; firstOperandLength = 0;
     secondOperandDigits=[];firstOperandDigits = [];
     document.getElementById("add").disabled = false;
     document.getElementById("minus").disabled = false;
     document.getElementById("multiply").disabled = false;
-    // document.getElementById("divide").disabled = false;
-    // document.getElementById("exponent").disabled = false;
+    document.getElementById("divide").disabled = false;
+    document.getElementById("exponent").disabled = false;
     document.getElementById("top-display").textContent="";
     let inputVal = `${operationResult}`; selectStorage(inputVal);
     let divContent = document.createElement("div");
@@ -424,5 +503,19 @@ function processEval (operationResult) {
     divContent.appendChild(content);
     topDisplay.appendChild(divContent);
     return operationResult;
+    }
+    //if division by zero is executed
+    else if (operationResult===undefined){
+    operatorCounter = 0; firstOperandLength = 0;
+    clearCounter = 0;
+    secondOperandDigits=[];firstOperandDigits = [];
+    document.getElementById("add").disabled = false;
+    document.getElementById("minus").disabled = false;
+    document.getElementById("multiply").disabled = false;
+    document.getElementById("divide").disabled = false;
+    document.getElementById("exponent").disabled = false;
+    document.getElementById("top-display").textContent="";
+    }
+
 }
 
